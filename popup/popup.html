@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Maps Scraper Pro</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#059669"/>
+              <stop offset="100%" style="stop-color:#10b981"/>
+            </linearGradient>
+          </defs>
+          <circle cx="16" cy="16" r="16" fill="url(#logoGrad)"/>
+          <path d="M16 8C13.2 8 11 10.2 11 13C11 16.5 16 24 16 24C16 24 21 16.5 21 13C21 10.2 18.8 8 16 8ZM16 15C14.9 15 14 14.1 14 13C14 11.9 14.9 11 16 11C17.1 11 18 11.9 18 13C18 14.1 17.1 15 16 15Z" fill="white"/>
+        </svg>
+        <div>
+          <h1>Maps Scraper Pro</h1>
+          <p class="subtitle">Extraction automatisée et intelligente</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="status-section" id="statusSection">
+      <div class="status-card">
+        <div class="status-indicator" id="statusIndicator">
+          <div class="pulse"></div>
+          <span id="statusText">Prêt à démarrer</span>
+        </div>
+        <div class="progress-bar" id="progressBar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-content">
+            <span class="stat-label">Combinaisons</span>
+            <span class="stat-value" id="combinationsCount">0</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📊</div>
+          <div class="stat-content">
+            <span class="stat-label">Résultats</span>
+            <span class="stat-value" id="resultsCount">0</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⏱️</div>
+          <div class="stat-content">
+            <span class="stat-label">Temps</span>
+            <span class="stat-value" id="timeElapsed">0:00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="live-results" id="liveResults" style="display: none;">
+      <div class="live-results-header">
+        <span>📍 Résultats en direct</span>
+        <button id="clearResultsBtn" class="btn-icon">✕</button>
+      </div>
+      <div class="live-results-list" id="liveResultsList"></div>
+    </div>
+
+    <div class="input-section">
+      <div class="input-group">
+        <label for="keywordsList">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          Mots-clés
+        </label>
+        <textarea
+          id="keywordsList"
+          placeholder="Entrez vos mots-clés (un par ligne)&#10;Exemple:&#10;taxi&#10;restaurant&#10;hôtel"
+          rows="4"
+        ></textarea>
+        <div class="input-info">
+          <span id="keywordCount">0 mots-clés</span>
+          <button id="loadKeywordsBtn" class="btn-text">Exemples</button>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="citiesList">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5"></path>
+            <path d="M2 12l10 5 10-5"></path>
+          </svg>
+          Villes
+        </label>
+        <textarea
+          id="citiesList"
+          placeholder="Entrez les villes (une par ligne)&#10;Exemple:&#10;Paris&#10;Lyon&#10;Marseille"
+          rows="4"
+        ></textarea>
+        <div class="input-info">
+          <span id="cityCount">0 villes</span>
+          <button id="loadCitiesBtn" class="btn-text">Villes FR</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="export-section">
+      <label>Format d'export</label>
+      <div class="export-options">
+        <label class="radio-card">
+          <input type="radio" name="exportFormat" value="csv" checked>
+          <div class="radio-content">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+            <span>CSV</span>
+          </div>
+        </label>
+        <label class="radio-card">
+          <input type="radio" name="exportFormat" value="json">
+          <div class="radio-content">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <path d="M10 12a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2"></path>
+              <path d="M14 12a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2"></path>
+            </svg>
+            <span>JSON</span>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="options-section">
+      <label class="checkbox-card">
+        <input type="checkbox" id="autoScroll" checked>
+        <div class="checkbox-content">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 15l-6-6-6 6"></path>
+          </svg>
+          <div>
+            <span class="option-title">Défilement automatique</span>
+            <span class="option-desc">Charge tous les résultats disponibles</span>
+          </div>
+        </div>
+      </label>
+      <label class="checkbox-card">
+        <input type="checkbox" id="groupResults">
+        <div class="checkbox-content">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 3h7v7H3z"></path>
+            <path d="M14 3h7v7h-7z"></path>
+            <path d="M14 14h7v7h-7z"></path>
+            <path d="M3 14h7v7H3z"></path>
+          </svg>
+          <div>
+            <span class="option-title">Regrouper les résultats</span>
+            <span class="option-desc">Un seul fichier pour toutes les recherches</span>
+          </div>
+        </div>
+      </label>
+      <label class="checkbox-card">
+        <input type="checkbox" id="showLiveResults" checked>
+        <div class="checkbox-content">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+          <div>
+            <span class="option-title">Affichage en direct</span>
+            <span class="option-desc">Voir les résultats pendant l'extraction</span>
+          </div>
+        </div>
+      </label>
+    </div>
+
+    <div class="actions">
+      <button id="openMapsBtn" class="btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+          <circle cx="12" cy="10" r="3"></circle>
+        </svg>
+        Ouvrir Google Maps
+      </button>
+      <button id="stopBtn" class="btn-danger" style="display: none;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="6" y="6" width="12" height="12"></rect>
+        </svg>
+        Arrêter
+      </button>
+    </div>
+
+    <div class="footer">
+      <button id="optionsBtn" class="btn-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M12 1v6m0 6v6m5.66-13.66l-4.24 4.24m0 6l-4.24 4.24M23 12h-6m-6 0H1m18.66 5.66l-4.24-4.24m0-6l-4.24-4.24"></path>
+        </svg>
+        Paramètres
+      </button>
+      <button id="helpBtn" class="btn-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+        Aide
+      </button>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

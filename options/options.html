@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Options - Google Maps Scraper Pro</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Google Maps Scraper Pro</h1>
+      <p class="subtitle">Configuration de l'extension</p>
+    </div>
+
+    <div class="content">
+      <section class="section">
+        <h2>Paramètres de recherche</h2>
+
+        <div class="setting-group">
+          <label for="scrollDelay">Délai de défilement (ms):</label>
+          <input type="number" id="scrollDelay" min="500" max="5000" step="100" value="1000">
+          <p class="description">Temps d'attente entre chaque défilement automatique</p>
+        </div>
+
+        <div class="setting-group">
+          <label for="scrollStep">Distance de défilement (pixels):</label>
+          <input type="number" id="scrollStep" min="100" max="1000" step="50" value="500">
+          <p class="description">Distance de défilement à chaque itération</p>
+        </div>
+
+        <div class="setting-group">
+          <label for="searchDelay">Délai entre recherches (ms):</label>
+          <input type="number" id="searchDelay" min="1000" max="10000" step="500" value="3000">
+          <p class="description">Temps d'attente après chaque recherche avant de scraper</p>
+        </div>
+
+        <div class="setting-group">
+          <label for="maxSameScroll">Nombre max de défilements identiques:</label>
+          <input type="number" id="maxSameScroll" min="3" max="20" step="1" value="10">
+          <p class="description">Arrêt du défilement après ce nombre de tentatives sans changement</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Paramètres d'export</h2>
+
+        <div class="setting-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="includeKeyword" checked>
+            <span>Inclure le mot-clé dans les données exportées</span>
+          </label>
+          <p class="description">Ajoute une colonne avec le mot-clé utilisé pour la recherche</p>
+        </div>
+
+        <div class="setting-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="includeTimestamp">
+            <span>Inclure la date d'extraction</span>
+          </label>
+          <p class="description">Ajoute une colonne avec la date et l'heure d'extraction</p>
+        </div>
+
+        <div class="setting-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="removeDuplicates" checked>
+            <span>Supprimer les doublons</span>
+          </label>
+          <p class="description">Élimine les entreprises en double (basé sur le nom)</p>
+        </div>
+
+        <div class="setting-group">
+          <label for="filePrefix">Préfixe des fichiers:</label>
+          <input type="text" id="filePrefix" placeholder="maps_scraper" value="maps_scraper">
+          <p class="description">Texte ajouté au début du nom de fichier</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Mode d'extraction</h2>
+
+        <div class="setting-group">
+          <label>Données à extraire:</label>
+          <div class="radio-group">
+            <label class="radio-option-vertical">
+              <input type="radio" name="extractionMode" value="full" checked>
+              <div>
+                <strong>Extraction complète</strong>
+                <p class="radio-description">Nom, catégorie, adresse, téléphone, site web, note (plus lent)</p>
+              </div>
+            </label>
+            <label class="radio-option-vertical">
+              <input type="radio" name="extractionMode" value="urls">
+              <div>
+                <strong>URLs uniquement</strong>
+                <p class="radio-description">Extrait uniquement les liens vers les fiches Google Maps (rapide)</p>
+              </div>
+            </label>
+            <label class="radio-option-vertical">
+              <input type="radio" name="extractionMode" value="phones">
+              <div>
+                <strong>Téléphones uniquement</strong>
+                <p class="radio-description">Extrait uniquement les numéros de téléphone (rapide)</p>
+              </div>
+            </label>
+            <label class="radio-option-vertical">
+              <input type="radio" name="extractionMode" value="urls_phones">
+              <div>
+                <strong>URLs + Téléphones</strong>
+                <p class="radio-description">Extrait les liens et téléphones (rapide)</p>
+              </div>
+            </label>
+            <label class="radio-option-vertical">
+              <input type="radio" name="extractionMode" value="websites">
+              <div>
+                <strong>Sites web uniquement</strong>
+                <p class="radio-description">Extrait uniquement les URLs des sites web des entreprises (rapide)</p>
+              </div>
+            </label>
+          </div>
+          <p class="description">💡 Les modes rapides sont 3x plus rapides car ils ne cliquent pas sur chaque fiche</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Apparence</h2>
+
+        <div class="setting-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="showProgress" checked>
+            <span>Afficher l'indicateur de progression</span>
+          </label>
+          <p class="description">Affiche un overlay avec la progression sur Google Maps</p>
+        </div>
+
+        <div class="setting-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="consoleLogging">
+            <span>Activer les logs dans la console</span>
+          </label>
+          <p class="description">Affiche des informations détaillées dans la console du navigateur</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Données</h2>
+
+        <div class="setting-group">
+          <button id="clearStorage" class="btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+            Effacer toutes les données
+          </button>
+          <p class="description">Supprime tous les paramètres et données sauvegardés</p>
+        </div>
+
+        <div class="setting-group">
+          <button id="resetDefaults" class="btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+              <path d="M21 3v5h-5"></path>
+              <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+              <path d="M3 21v-5h5"></path>
+            </svg>
+            Réinitialiser par défaut
+          </button>
+          <p class="description">Restaure tous les paramètres par défaut</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>À propos</h2>
+        <div class="about-info">
+          <p><strong>Version:</strong> 1.0.0</p>
+          <p><strong>Description:</strong> Extension professionnelle pour extraire automatiquement les données des entreprises depuis Google Maps</p>
+          <p><strong>Fonctionnalités:</strong></p>
+          <ul>
+            <li>Extraction automatique multi-mots-clés</li>
+            <li>Export en CSV, JSON, Excel, XML</li>
+            <li>Défilement automatique intelligent</li>
+            <li>Suivi en temps réel de la progression</li>
+            <li>Suppression automatique des doublons</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+
+    <div class="footer">
+      <button id="saveBtn" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+          <polyline points="17 21 17 13 7 13 7 21"></polyline>
+          <polyline points="7 3 7 8 15 8"></polyline>
+        </svg>
+        Enregistrer les modifications
+      </button>
+    </div>
+
+    <div id="notification" class="notification"></div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

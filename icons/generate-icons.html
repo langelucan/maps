@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Générateur d'icônes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f0f0f0;
+    }
+    .icon-container {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .icon-box {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    canvas {
+      border: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+  <h1>Générateur d'icônes pour Maps Scraper Pro</h1>
+  <p>Cliquez sur chaque icône pour la télécharger</p>
+
+  <div class="icon-container">
+    <div class="icon-box">
+      <canvas id="icon16" width="16" height="16"></canvas>
+      <p>16x16</p>
+      <button onclick="downloadIcon('icon16', 'icon16.png')">Télécharger</button>
+    </div>
+    <div class="icon-box">
+      <canvas id="icon32" width="32" height="32"></canvas>
+      <p>32x32</p>
+      <button onclick="downloadIcon('icon32', 'icon32.png')">Télécharger</button>
+    </div>
+    <div class="icon-box">
+      <canvas id="icon48" width="48" height="48"></canvas>
+      <p>48x48</p>
+      <button onclick="downloadIcon('icon48', 'icon48.png')">Télécharger</button>
+    </div>
+    <div class="icon-box">
+      <canvas id="icon128" width="128" height="128"></canvas>
+      <p>128x128</p>
+      <button onclick="downloadIcon('icon128', 'icon128.png')">Télécharger</button>
+    </div>
+  </div>
+
+  <script>
+    function drawIcon(canvasId, size) {
+      const canvas = document.getElementById(canvasId);
+      const ctx = canvas.getContext('2d');
+
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, '#059669');
+      gradient.addColorStop(1, '#10b981');
+
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, size, size);
+
+      ctx.fillStyle = 'white';
+      ctx.beginPath();
+      const centerX = size / 2;
+      const centerY = size / 2;
+      const pinHeight = size * 0.7;
+      const pinWidth = size * 0.5;
+
+      ctx.moveTo(centerX, centerY - pinHeight / 4);
+      ctx.bezierCurveTo(
+        centerX - pinWidth / 2, centerY - pinHeight / 4,
+        centerX - pinWidth / 2, centerY + pinHeight / 8,
+        centerX, centerY + pinHeight / 2.5
+      );
+      ctx.bezierCurveTo(
+        centerX + pinWidth / 2, centerY + pinHeight / 8,
+        centerX + pinWidth / 2, centerY - pinHeight / 4,
+        centerX, centerY - pinHeight / 4
+      );
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(centerX, centerY - pinHeight / 8, size * 0.12, 0, Math.PI * 2);
+      ctx.fillStyle = '#059669';
+      ctx.fill();
+    }
+
+    function downloadIcon(canvasId, filename) {
+      const canvas = document.getElementById(canvasId);
+      const url = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = url;
+      link.click();
+    }
+
+    drawIcon('icon16', 16);
+    drawIcon('icon32', 32);
+    drawIcon('icon48', 48);
+    drawIcon('icon128', 128);
+  </script>
+</body>
+</html>
