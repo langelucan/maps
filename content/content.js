@@ -637,7 +637,12 @@ function processNextCombination() {
 function searchCombination(combination, callback) {
   updateProgressUI(`Recherche: "<strong>${combination.searchQuery}</strong>"...`);
 
-  const searchInput = document.querySelector('input#searchboxinput');
+  // Essayer plusieurs sélecteurs pour le champ de recherche
+  const searchInput = document.querySelector('input[role="combobox"]') ||
+                      document.querySelector('input[name="q"]') ||
+                      document.querySelector('input#searchboxinput') ||
+                      document.querySelector('input[aria-label*="Recherch"]');
+
   if (!searchInput) {
     console.error('Champ de recherche non trouvé');
     handleError('Champ de recherche non trouvé');
@@ -646,15 +651,19 @@ function searchCombination(combination, callback) {
 
   searchInput.value = combination.searchQuery;
   searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+  searchInput.dispatchEvent(new Event('change', { bubbles: true }));
 
-  const searchButton = document.querySelector('button#searchbox-searchbutton');
+  // Essayer plusieurs sélecteurs pour le bouton de recherche
+  const searchButton = document.querySelector('button#searchbox-searchbutton') ||
+                       document.querySelector('button[aria-label*="Recherch"]') ||
+                       document.querySelector('button[jsaction*="search"]');
+
   if (!searchButton) {
-    console.error('Bouton de recherche non trouvé');
-    handleError('Bouton de recherche non trouvé');
-    return;
+    // Simuler la touche Entrée si le bouton n'est pas trouvé
+    searchInput.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', keyCode: 13, bubbles: true }));
+  } else {
+    searchButton.click();
   }
-
-  searchButton.click();
 
   setTimeout(callback, 3000);
 }
